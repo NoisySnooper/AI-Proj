@@ -157,10 +157,9 @@ class ComprehensiveRRUFFScraper:
         print("\n📥 STEP 2: Automated bulk download from RRUFF...")
 
         bulk_urls = {
-            'raman_spectra': 'https://rruff.info/zipped_data_files/raman/excellent_unoriented.zip',
-            'chemistry_data': 'https://rruff.info/zipped_data_files/raman/chemistry.zip'
+            'raman_spectra': 'https://www.rruff.net/zipped_data_files/raman/',
+            'chemistry_data': 'https://www.rruff.net/zipped_data_files/chemistry/'
         }
-
         downloaded = {}
 
         for key, url in bulk_urls.items():
