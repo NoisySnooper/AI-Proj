@@ -1,0 +1,24 @@
+# Common Python ignores
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.log
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Datasets and outputs
+models/
+data/
+outputs/
+checkpoints/
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store
