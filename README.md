@@ -41,7 +41,7 @@ Ensemble (RF+NN): A robust hybrid model that combines a Random Forest (for stabi
 
 advanced_training_system_v3_part1.py (The "Teacher")
 
-Purpose: A complete, research-grade training and evaluation harness.   
+Purpose: A training and evaluation harness.   
 
 Features:
 
