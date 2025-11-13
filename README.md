@@ -1,14 +1,12 @@
-Raman Spectrum Prediction Model
-A deep learning system that predicts a mineral's 500-point Raman spectrum ("chemical fingerprint") using 15 chemical and physical feature inputs.
+# Raman Spectrum Prediction Model
 
-Core Principle: Data-first. Requires >1,000 real-world samples from the RRUFF database to function.
+A deep learning system that predicts a mineral's 500-point Raman spectrum ("chemical fingerprint") using 15 chemical and physical feature inputs.
 
 Installation
 Requires Python and the following libraries:
 
-Bash
+    pip install torch numpy pandas scikit-learn matplotlib scipy tqdm requests beautifulsoup
 
-pip install torch numpy pandas scikit-learn matplotlib scipy tqdm requests beautifulsoup
 Usage
 1. Data Collection (Critical)
 You must generate the dataset before training. The scraper processes local files or downloads from RRUFF.
@@ -21,69 +19,66 @@ Download "Raman" and "Chemistry" .zip files from the RRUFF website.
 
 Place zips in the folder.
 
-Option B (Automatic): Simply run the script (will download automatically if local files are missing).
-
-Bash
-
-python comprehensive_rruff_scraper_v3.py
-Output: rruff_complete_dataset/ containing standardized .npy files. Warning: If the scraper yields <1,000 samples, models will fail.
+Option B (Automatic): Simply run the script (will download automatically if local files are missing): python comprehensive_rruff_scraper_v3.py
 
 2. Training
 Run the training system. You can select specific models or run the full suite.
 
-Python
 
-from advanced_training_system_v3_part1 import RamanTrainingSystem
-from modern_raman_models_v3 import ConvNeXt1DModel
-
-# fast_mode=True (50 epochs), fast_mode=False (200 epochs)
-trainer = RamanTrainingSystem(fast_mode=True)
-features, spectra = trainer.load_data()
+# Training Mode: Fast vs. Full
+    fast_mode=True (50 epochs), fast_mode=False (200 epochs)
+    trainer = RamanTrainingSystem(fast_mode=True)
+    features, spectra = trainer.load_data()
 
 # Prepare data splits (70/15/15)
-X_train, X_val, X_test, y_train, y_val, y_test = trainer.prepare_data(features, spectra)
-train_loader, val_loader = trainer.create_dataloaders(X_train, y_train, X_val, y_val)
+    X_train, X_val, X_test, y_train, y_val, y_test = trainer.prepare_data(features, spectra)
+    train_loader, val_loader = trainer.create_dataloaders(X_train, y_train, X_val, y_val)
 
 # Initialize Model
-model = ConvNeXt1DModel(input_features=X_train.shape[1], spectrum_points=y_train.shape[1])
+    model = ConvNeXt1DModel(input_features=X_train.shape[1], spectrum_points=y_train.shape[1])
 
 # Train
-trained_model, train_losses, val_losses = trainer.train_pytorch_model(
-    model=model,
-    model_name="ConvNeXt1D",
-    train_loader=train_loader,
-    val_loader=val_loader
-)
+    trained_model, train_losses, val_losses = trainer.train_pytorch_model(
+        model=model,
+        model_name="ConvNeXt1D",
+        train_loader=train_loader,
+        val_loader=val_loader
 
-# Evaluate
-trainer.evaluate_model(trained_model, "ConvNeXt1D", X_test, y_test, is_ensemble=False)
-Components
-comprehensive_rruff_scraper_v3.py
+# Evaluator
+
+    trainer.evaluate_model(trained_model, "ConvNeXt1D", X_test, y_test, is_ensemble=False)
+
+Components: comprehensive_rruff_scraper_v3.py
+
 Role: Data Pipeline
 
-Scrapes/loads RRUFF data.
+- Scrapes/loads RRUFF data.
 
-Filters for quality (range 50-4000 cm⁻¹).
+- Filters for quality (range 50-4000 cm⁻¹).
 
-Standardizes spectra (500 points, 200-1200 cm⁻¹).
+- Standardizes spectra (500 points, 200-1200 cm⁻¹).
 
-Encodes 15-feature input vector.
+- Encodes 15-feature input vector.
 
-modern_raman_models_v3.py
+Components: modern_raman_models_v3.py
+
 Role: Model Architectures
 
-ConvNeXt1D: (Primary) 1D CNN adapted from vision research.
+Models:
 
-SpectraFormer: Transformer-based, uses self-attention for peak relationships.
+- ConvNeXt1D: (Primary) 1D CNN adapted from vision research.
 
-CNN-LSTM: Hybrid for local features and sequential patterns.
+- SpectraFormer: Transformer-based, uses self-attention for peak relationships.
 
-Ensemble: Random Forest + Neural Network.
+- CNN-LSTM: Hybrid for local features and sequential patterns.
 
-advanced_training_system_v3_part1.py
+- Ensemble: Random Forest + Neural Network.
+
+Components: advanced_training_system_v3_part1.py
+
 Role: Training Harness
 
-Implements AdamW, gradient clipping, ReduceLROnPlateau.
+- Implements AdamW, gradient clipping, and ReduceLROnPlateau.
 
 Metrics: R², Shape Correlation, Peak Position Accuracy (±20 cm⁻¹).
 
